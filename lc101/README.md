@@ -9,7 +9,7 @@ Table of Contents
 1.  Overview :heavy_check_mark:
 2.  Greedy :heavy_check_mark:
 3.  Two pointers :heavy_check_mark:
-4.  Binary search
+4.  Binary search :heavy_check_mark:
 5.  Sort
 6.  Search
 7.  Dynamic programming
