@@ -10,7 +10,7 @@ Table of Contents
 2.  Greedy :heavy_check_mark:
 3.  Two pointers :heavy_check_mark:
 4.  Binary search :heavy_check_mark:
-5.  Sort
+5.  Sort :heavy_check_mark:
 6.  Search
 7.  Dynamic programming
 8.  Divide and conquer
