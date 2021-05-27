@@ -11,7 +11,7 @@ Table of Contents
 3.  Two pointers :heavy_check_mark:
 4.  Binary search :heavy_check_mark:
 5.  Sort :heavy_check_mark:
-6.  Search
+6.  Search :heavy_check_mark:
 7.  Dynamic programming
 8.  Divide and conquer
 9.  Math

@@ -400,3 +400,109 @@ class Solution:
         backtrack([], visited)
         return ans
 ```
+
+40. [Combination Sum II](https://leetcode.com/problems/combination-sum-ii)  
+
+```python
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        candidates = sorted(candidates)
+        ans = []
+        
+        def dfs(left, path, start):
+            if left < 0:
+                return
+            if left == 0: # sum(path) == target
+                ans.append(path[:])
+                return
+            
+            for i in range(start, len(candidates)):
+                if i > start and candidates[i-1] == candidates[i]:
+                    continue
+                
+                dfs(left - candidates[i], path + [candidates[i]], i + 1)
+        
+        dfs(target, [], 0)
+        return ans
+```
+
+37. [Sudoku Solver](https://leetcode.com/problems/sudoku-solver)  
+
+```python
+class Solution:
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        return self.backtrack(board, 0, 0)
+
+    def backtrack(self, board, i, j):
+        m, n = 9, 9
+        if j == n:
+            return self.backtrack(board, i + 1, 0)
+        
+        if i == m:
+            return True
+        
+        if board[i][j] != ".":
+            return self.backtrack(board, i, j + 1)
+        
+        for number in range(1, 10):
+            if not self.valid(board, i, j, number):
+                continue
+            
+            board[i][j] = str(number)
+            if self.backtrack(board, i, j + 1):
+                return True
+            board[i][j] = "."
+
+    
+    def valid(self, board, i, j, number):
+        for p in range(9):
+            if board[p][j] == str(number):
+                return False
+            if board[i][p] == str(number):
+                return False
+            row = (i // 3) * 3 + p // 3
+            col = (j // 3) * 3 + p % 3
+            if board[row][col] == str(number):
+                return False
+        return True
+```
+
+310. [Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees)  
+
+```python
+class Solution:
+    def findMinHeightTrees(self, n: int, edges: List[List[int]]) -> List[int]:
+        if n == 1:
+            return [0]
+        
+        degree = [0 for i in range(n)]
+        dic = collections.defaultdict(list)
+        for edge in edges:
+            node1, node2 = edge
+            degree[node1] += 1
+            degree[node2] += 1
+            dic[node1].append(node2)
+            dic[node2].append(node1)
+        
+        # degree = 1
+        queue = []
+        for i in range(n):
+            if degree[i] == 1:
+                queue.append(i)
+        
+        while queue:
+            size = len(queue)
+            res = []
+
+            for i in range(size):
+                node = queue.pop(0)
+                res.append(node)
+
+                adjacent = dic[node]
+                for adj in adjacent:
+                    degree[adj] -= 1
+                    if degree[adj] == 1:
+                        queue.append(adj)
+        
+        return res
+```
