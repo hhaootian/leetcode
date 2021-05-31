@@ -105,3 +105,82 @@ class Solution:
         return dp
 ```
 
+221. [ Maximal Square](https://leetcode.com/problems/maximal-square)  
+
+```python
+class Solution:
+    def maximalSquare(self, matrix: List[List[str]]) -> int:
+        # [i-1][j-1], [i-1][j]
+        # [i][j-1],   [i][j]
+        
+        m, n = len(matrix), len(matrix[0])
+        dp = [[0 for j in range(n)] for i in range(m)]
+
+        for i in range(m):
+            if matrix[i][0] == "1":
+                dp[i][0] = 1
+        
+        for j in range(n):
+            if matrix[0][j] == "1":
+                dp[0][j] = 1
+        
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][j] == "1":
+                    dp[i][j] = min([dp[i-1][j-1], dp[i-1][j], dp[i][j-1]]) + 1
+        
+        result = 0
+        for i in range(m):
+            for j in range(n):
+                result = max(result, dp[i][j])
+
+        return result ** 2
+```
+
+279. [ Perfect Squares](https://leetcode.com/problems/perfect-squares)  
+
+```python
+class Solution:
+    def numSquares(self, n: int) -> int:
+        # dp[i] = min(dp[i], 1 + min(dp[i - 1], dp[i - 4], dp[i - 9] .... ))
+        dp = [float('inf') for i in range(n + 1)]
+        dp[0] = 0
+
+        for i in range(1, n + 1):
+            j = 1
+            while j * j <= i: # i - j ** 2 >= 0
+                dp[i] = min(dp[i], dp[i - j * j] + 1)
+                j += 1
+        
+        return dp[-1]
+```
+
+91. [ Decode Ways](https://leetcode.com/problems/decode-ways)  
+
+```python
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        if s[0] == "0":
+            return 0
+        
+        n = len(s)
+        dp = [0 for i in range(n + 1)]
+        dp[0] = 1
+        dp[1] = 1
+
+        # s:   1 1 1
+        #dp: 0 0 0 0
+        # dp[i] -> s[i-1]
+
+        for i in range(2, n+1):
+            if s[i-1] == "0":
+                dp[i] = 0
+            else:
+                dp[i] = dp[i-1]
+            
+            double = int(s[i - 2 : i])
+            if double >= 10 and double <= 26:
+                dp[i] += dp[i-2]
+        
+        return dp[-1]
+```
