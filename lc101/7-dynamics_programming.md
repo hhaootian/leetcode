@@ -184,3 +184,98 @@ class Solution:
         
         return dp[-1]
 ```
+
+139. [ Word Break](https://leetcode.com/problems/word-break)  
+
+```python
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        dp = [False for i in range(len(s) + 1)]
+        # dp[i] -> T/F, s[i-1]
+        # dp[i] -> word in wordDict, length, 
+        # s[i-length:i] == word YES! dp[i] = dp[i-length]
+
+        dp[0] = True
+        for i in range(1, len(s) + 1):
+            #dp[i]
+            for word in wordDict:
+                if s[i-len(word) : i] == word:
+                    dp[i] = dp[i] or dp[i - len(word)]
+            
+        return dp[-1]
+```
+
+300. [ Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence)  
+
+```python
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        # 0 ... j ... i
+        # dp[i] = max(dp[i], dp[j] + 1)
+
+        n = len(nums)
+        dp = [1 for i in range(n)]
+
+        for i in range(n):
+            for j in range(0, i):
+                if nums[i] > nums[j]:
+                    dp[i] = max(dp[i], dp[j] + 1)
+        
+        return max(dp)
+```
+
+1143. [ Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence)  
+
+```python
+class Solution:
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        # dp[i][j] 
+        '''
+          X a b c d e
+        X
+        a     ? ?
+        c     ? NO
+        e
+        '''
+
+        len1, len2 = len(text1), len(text2)
+        dp = [[0 for j in range(len2 + 1)] for i in range(len1 + 1)]
+
+        for i in range(1, len1 + 1):
+            for j in range(1, len2 + 1):
+                if text1[i-1] == text2[j-1]:
+                    dp[i][j] = dp[i-1][j-1] + 1
+                else:
+                    dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+        
+        return dp[-1][-1]
+```
+
+416. [ Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum)  
+
+```python
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        total = sum(nums)
+        if total % 2 == 1:
+            return False
+
+        # i, p, q.... sum() == total / 2
+        target = total // 2
+        size = len(nums)
+        dp = [[False for j in range(target + 1)] for i in range(size + 1)]
+
+        for i in range(size + 1):
+            dp[i][0] = True
+        
+        for i in range(1, size + 1):
+            weight = nums[i - 1]
+            for j in range(1, target + 1):
+                if j-weight >= 0:
+                    dp[i][j] = dp[i-1][j] or dp[i-1][j-weight] #!!!!
+                else:
+                    dp[i][j] = dp[i-1][j]
+        
+        return dp[-1][-1]
+```
+
