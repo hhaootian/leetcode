@@ -279,3 +279,190 @@ class Solution:
         return dp[-1][-1]
 ```
 
+474. [ Ones and Zeroes](https://leetcode.com/problems/ones-and-zeroes)  
+
+```python
+class Solution:
+    def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
+        dp = [[0 for j in range(n + 1)] for i in range(m + 1)]
+
+        for string in strs:
+            zero, one = string.count("0"), string.count("1")
+            # zero
+            for i in range(m, zero - 1, -1):
+                for j in range(n, one - 1, -1):
+                    dp[i][j] = max(dp[i][j], 1 + dp[i-zero][j-one])
+        
+        return dp[-1][-1]
+```
+
+322. [ Coin Change](https://leetcode.com/problems/coin-change)  
+
+```python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        if not coins:
+            return -1
+        
+        size = len(coins)
+        dp = [[float('inf') for j in range(amount + 1)] for i in range(size + 1)]
+
+        for i in range(size + 1):
+            dp[i][0] = 0
+        
+        for i in range(1, size + 1):
+            weight = coins[i - 1]
+            for j in range(1, amount + 1):
+                # 0-1 -> dp[i][j] = min(dp[i-1][j], 1 + dp[i-1][j - weight])
+                if j - weight >= 0:
+                    dp[i][j] = min(dp[i-1][j], 1 + dp[i][j - weight])
+                else:
+                    dp[i][j] = dp[i-1][j]
+        
+        return dp[-1][-1] if  dp[-1][-1] < float('inf') else -1
+```
+
+72. [ Edit Distance](https://leetcode.com/problems/edit-distance)  
+
+```python
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        #i, j
+        #dp[i][j] -> word1[:i] == word2[:j]
+
+        m, n = len(word1), len(word2)
+        dp = [[float('inf') for j in range(n + 1)] for i in range(m + 1)]
+        for i in range(m + 1):
+            dp[i][0] = i
+        for j in range(n + 1):
+            dp[0][j] = j
+        
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if word1[i-1] == word2[j-1]:
+                    dp[i][j] = dp[i-1][j-1]
+                else:
+                    dp[i][j] = 1 + min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1])
+        
+        return dp[-1][-1]
+```
+
+650. 
+
+```python
+class Solution:
+    def minSteps(self, n: int) -> int:
+        #dp[i] 
+        #
+
+        dp = [0 for i in range(n + 1)]
+
+        for i in range(2, n + 1):
+            dp[i] = i
+            for j in range(2, i):
+                if i % j == 0:
+                    # i = 6, j = 2, dp[2] = a, dp[6] = a + 1 + 2
+                    # (i - j) // j + j / j = i // j
+                    dp[i] = min(dp[i], dp[j] + i // j)
+        
+        return dp[-1]
+```
+
+10. [ Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching)  
+
+```python
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        m, n = len(s), len(p)
+        #dp[i][j] = T/F, s[:i], p[:j]
+        dp = [[False for j in range(n + 1)] for i in range(m + 1)]
+
+        # init
+        dp[0][0] = True
+
+        for j in range(1, n + 1):
+            # match 0
+            if p[j-1] == "*":
+                # j-2, j-1, j
+                dp[0][j] = dp[0][j-2]
+        
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                # match 
+                if p[j-1] == s[i-1] or p[j-1] == ".":
+                    dp[i][j] = dp[i-1][j-1]
+                # not match
+                elif p[j-1] == "*":
+                    '''
+                    S: ### (i-1) b(i)
+                    P: ### (j-2) b(j-1) *(j)
+                    '''
+                    if p[j-2] == s[i-1] or p[j-2] == ".":
+                        # dp[i][j-2] -> * = 0
+                        # dp[i-1][j] -> s中多个重复字符
+                        dp[i][j] = dp[i][j-2] or dp[i-1][j]
+                    else:
+                        dp[i][j] = dp[i][j-2]
+        
+        return dp[-1][-1]
+```
+
+121. [ Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock)  
+
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        # k = 1
+
+        n = len(prices)
+        dp = [[0 for _ in range(2)] for i in range(n + 1)]
+        
+        dp[0][1] = -float('inf')
+
+        for i in range(1, n + 1):
+            dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i - 1])
+            dp[i][1] = max(dp[i-1][1], -prices[i - 1])
+        
+        return dp[-1][0]
+```
+
+188. [ Best Time to Buy and Sell Stock IV](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv)  
+
+```python
+class Solution:
+    def maxProfit(self, K: int, prices: List[int]) -> int:
+        n = len(prices)
+        dp = [[[0 for _ in range(2)] for k in range(K + 1)] for i in range(n + 1)]
+        
+        # init
+        for k in range(K + 1):
+            dp[0][k][0] = 0
+            dp[0][k][1] = -float('inf')
+        
+        for i in range(1, n + 1):
+            dp[i][0][0] = 0
+            dp[i][0][1] = -float('inf')
+
+            for k in range(1, K + 1):
+                dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i - 1])
+                dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i - 1])
+
+        return dp[n][K][0]
+```
+
+309. [ Best Time to Buy and Sell Stock with Cooldown](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown)  
+
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        n = len(prices)
+
+        dp = [[0 for _ in range(2)] for i in range(n + 1)]
+        dp[0][1] = -float('inf')
+
+        for i in range(1, n + 1):
+            dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i - 1])
+            dp[i][1] = max(dp[i-1][1], dp[i-2][0] - prices[i - 1])
+
+        return dp[n][0]
+```
