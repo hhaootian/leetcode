@@ -12,7 +12,7 @@ Table of Contents
 4.  Binary search :heavy_check_mark:
 5.  Sort :heavy_check_mark:
 6.  Search :heavy_check_mark:
-7.  Dynamic programming
+7.  Dynamic programming :heavy_check_mark:
 8.  Divide and conquer
 9.  Math
 10.  Bit manipulation
