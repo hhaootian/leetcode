@@ -466,3 +466,186 @@ class Solution:
 
         return dp[n][0]
 ```
+
+213. [ House Robber II](https://leetcode.com/problems/house-robber-ii)  
+
+```python
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        #dp[i] = nums[i-1] + dp[i-2], dp[i-1]
+        def helper(nums):
+            N = len(nums)
+            dp = [0 for i in range(N + 1)]
+            for i in range(1, N + 1):
+                dp[i] = max(dp[i-1], nums[i-1] + dp[i-2])
+            
+            return dp[-1]
+        
+        if not nums:
+            return 0
+        
+        if len(nums) == 1:
+            return nums[0]
+        
+        return max(helper(nums[:-1]), helper(nums[1:]))
+```
+
+53. [Maximum Subarray](https://leetcode.com/problems/maximum-subarray)  
+
+```python
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        #dp[i]
+        #dp[i] = max(dp[i-1] + nums[i-1], nums[i-1])
+
+        n = len(nums)
+        dp = [0 for i in range(n + 1)]
+
+        for i in range(1, n + 1):
+            dp[i] = max(dp[i-1] + nums[i-1], nums[i-1])
+        
+        return max(dp[1:])
+```
+
+343. [Integer Break](https://leetcode.com/problems/integer-break)  
+
+```python
+class Solution:
+    def integerBreak(self, n: int) -> int:
+        #dp[i] 
+        #dp[i] = max(dp[i], j * (i - j), j * dp[i - j])
+
+        dp = [0 for i in range(n + 1)]
+
+        for i in range(1, n + 1):
+            for j in range(1, i):
+                dp[i] = max([dp[i], j * (i - j), j * dp[i-j]])
+        
+        return dp[-1]     
+```
+
+583. [Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings)  
+
+```python
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        #dp[i][j] 
+
+        m, n = len(word1), len(word2)
+        dp = [[0 for j in range(n + 1)] for i in range(m + 1)]
+
+        # init
+        for i in range(m + 1):
+            dp[i][0] = i
+        
+        for j in range(n + 1):
+            dp[0][j] = j
+
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if word1[i-1] != word2[j-1]:
+                    dp[i][j] = min([dp[i-1][j-1] + 2, dp[i-1][j] + 1, dp[i][j-1] + 1])
+                else:
+                    dp[i][j] = min([dp[i-1][j-1], dp[i-1][j] + 1, dp[i][j-1] + 1])
+
+        return dp[-1][-1]
+```
+
+646. [Maximum Length of Pair Chain](https://leetcode.com/problems/maximum-length-of-pair-chain)  
+
+```python
+class Solution:
+    def findLongestChain(self, pairs: List[List[int]]) -> int:
+        #dp[i] 
+        pairs = sorted(pairs, key = lambda x: (x[0], x[1]))
+        n = len(pairs)
+        dp = [1 for i in range(n + 1)]
+
+        for i in range(2, n + 1):
+            end = pairs[i - 1]
+            for j in range(1, i):
+                start = pairs[j - 1]
+                if start[1] < end[0]:
+                    dp[i] = max(dp[i], dp[j] + 1)
+        
+        return dp[-1]
+```
+
+376. [Wiggle Subsequence](https://leetcode.com/problems/wiggle-subsequence)  
+
+```python
+class Solution:
+    def wiggleMaxLength(self, nums: List[int]) -> int:
+        n = len(nums)
+        up = [0 for i in range(n + 1)] #up[i]
+        down = [0 for i in range(n + 1)]
+
+        # init
+        up[1] = 1
+        down[1] = 1
+
+        for i in range(2, n + 1):
+            if nums[i-1] > nums[i-2]:
+                up[i] = max(up[i-1], down[i-1] + 1)
+                down[i] = down[i-1]
+            
+            elif nums[i-1] < nums[i-2]:
+                up[i] = up[i-1]
+                down[i] = max(down[i-1], up[i-1] + 1)
+            
+            else:
+                up[i] = up[i-1]
+                down[i] = down[i-1]
+        
+        return max(up[-1], down[-1])
+```
+
+494. [Target Sum](https://leetcode.com/problems/target-sum)  
+
+```python
+class Solution:
+    def findTargetSumWays(self, nums: List[int], target: int) -> int:
+        if target > sum(nums):
+            return 0
+        
+        #dp[i][j] 
+        total = sum(nums)
+        size = 2 * total + 1
+        dp = [[0 for j in range(size)] for i in range(len(nums) + 1)]
+        # -3, -2, -1, 0, 1, 2, 3
+        #
+        #
+
+        # init
+        # !!! total
+        dp[1][total + nums[0]] += 1
+        dp[1][total - nums[0]] += 1
+
+        for i in range(1, len(nums) + 1):
+            val = nums[i - 1]
+            for j in range(0, size):
+                if j + val >= 0 and j + val <= size - 1:
+                    dp[i][j] += dp[i-1][j + val]
+                if j - val >= 0 and j - val <= size - 1:
+                    dp[i][j] += dp[i-1][j - val]
+
+        return dp[-1][total + target]
+```
+
+714. [Best Time to Buy and Sell Stock with Transaction Fee](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee)  
+
+```python
+class Solution:
+    def maxProfit(self, prices: List[int], fee: int) -> int:
+        n = len(prices)
+        dp = [[0 for _ in range(2)] for i in range(n + 1)]
+
+        # init
+        dp[0][1] = -float('inf')
+
+        for i in range(1, n + 1):
+            dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i - 1] - fee)
+            dp[i][1] = max(dp[i-1][1], dp[i-1][0] - prices[i - 1])
+
+        return dp[n][0]
+```
