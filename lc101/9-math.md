@@ -1,5 +1,5 @@
 
-## Chapter 9
+# Chapter 9
 
 204. [Count Primes](https://leetcode.com/problems/count-primes)  
 
@@ -95,4 +95,70 @@ class Solution:
             ans = "1" + ans
         
         return ans
+```
+
+326. [Power of Three](https://leetcode.com/problems/power-of-three)  
+
+```python
+class Solution:
+    def isPowerOfThree(self, n: int) -> bool:
+        if n == 1:
+            return True
+        if n == 0:
+            return False
+        
+        return n % 3 == 0 and self.isPowerOfThree(n // 3)
+```
+
+384. [Shuffle an Array](https://leetcode.com/problems/shuffle-an-array)  
+
+```python
+class Solution:
+
+    def __init__(self, nums: List[int]):
+        self.nums = nums
+
+
+    def reset(self) -> List[int]:
+        """
+        Resets the array to its original configuration and return it.
+        """
+        return self.nums
+
+
+    def shuffle(self) -> List[int]:
+        """
+        Returns a random shuffling of the array.
+        """
+        nums = self.nums[:]
+        for i in range(len(nums) - 1, 0, -1):
+            j = random.randint(0, i)
+            nums[i], nums[j] = nums[j], nums[i]
+        
+        return nums
+```
+
+528. [Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight)  
+
+```python
+class Solution:
+
+    def __init__(self, w: List[int]):
+        self.nums = [w[0]]
+        for i in range(1, len(w)):
+            self.nums.append(self.nums[-1] + w[i])
+
+    def pickIndex(self) -> int:
+        target = random.randint(1, self.nums[-1])
+        left, right = 0, len(self.nums) - 1
+
+        while left < right:
+            mid = (left + right) // 2
+
+            if self.nums[mid] < target:
+                left = mid + 1
+            else:
+                right = mid
+        
+        return right
 ```
