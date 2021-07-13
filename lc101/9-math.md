@@ -162,3 +162,84 @@ class Solution:
         
         return right
 ```
+
+382. [Linked List Random Node](https://leetcode.com/problems/linked-list-random-node)  
+
+```python
+class Solution:
+
+    def __init__(self, head: ListNode):
+        """
+        @param head The linked list's head.
+        Note that the head is guaranteed to be not null, so it contains at least one node.
+        """
+        self.head = head
+
+
+    def getRandom(self) -> int:
+        """
+        Returns a random node's value.
+        """
+        val = None
+        prob = self.head
+        m = 0
+        while prob:
+            m += 1
+            if random.random() < 1 / m:
+                val = prob.val
+            prob = prob.next
+        
+        return val
+```
+
+168. [ Excel Sheet Column Title](https://leetcode.com/problems/excel-sheet-column-title)  
+
+```python
+class Solution:
+    def convertToTitle(self, columnNumber: int) -> str:
+
+        ans = ""
+        while columnNumber:
+            columnNumber -= 1
+            num = columnNumber % 26
+            ans = chr(ord("A") + num) + ans
+            columnNumber //= 26
+            
+        
+        return ans
+```
+
+67. [Add Binary](https://leetcode.com/problems/add-binary)  
+
+```python
+class Solution:
+    def addBinary(self, a: str, b: str) -> str:
+        # len(a) >= len(b)
+        if len(b) > len(a):
+            return self.addBinary(b, a)
+        
+        p1, p2 = len(a) - 1, len(b) - 1
+        ans = ""
+        carry = 0
+
+        while p2 >= 0:
+            val = carry + int(a[p1]) + int(b[p2])
+            carry = val // 2
+            val = val % 2
+            ans = str(val) + ans
+            p1 -= 1
+            p2 -= 1
+        
+        while p1 >= 0:
+            val = carry + int(a[p1])
+            carry = val // 2
+            val = val % 2
+            ans = str(val) + ans
+            p1 -= 1
+        
+        if carry:
+            ans = "1" + ans
+        
+        return ans
+```
+
