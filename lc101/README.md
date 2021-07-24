@@ -14,7 +14,7 @@ Table of Contents
 6.  Search :heavy_check_mark:
 7.  Dynamic programming :heavy_check_mark:
 8.  Divide and conquer :heavy_check_mark:
-9.  Math
+9.  Math :heavy_check_mark:
 10.  Bit manipulation
 11.  Data structure
 12.  String

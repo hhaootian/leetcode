@@ -243,3 +243,82 @@ class Solution:
         return ans
 ```
 
+238. [Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self)  
+
+```python
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        left = [1]
+        for i in range(len(nums)):
+            left.append(left[-1] * nums[i])
+        
+        right = [1]
+        for i in range(len(nums) - 1, -1, -1):
+            right.append(right[-1] * nums[i])
+        
+        right = right[::-1]
+
+        ans = []
+        for i in range(1, len(left)):
+            ans.append(left[i-1] * right[i])
+        
+        return ans
+```
+
+462. [Minimum Moves to Equal Array Elements II](https://leetcode.com/problems/minimum-moves-to-equal-array-elements-ii)  
+
+```python
+class Solution:
+    def minMoves2(self, nums: List[int]) -> int:
+        nums = sorted(nums)
+        median = nums[len(nums) // 2]
+
+        ans = 0
+        for num in nums:
+            ans += abs(num - median)
+        
+        return ans
+```
+
+169. [Majority Element](https://leetcode.com/problems/majority-element)  
+
+```python
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        return sorted(nums)[len(nums) // 2]
+```
+
+470. [Implement Rand10() Using Rand7()](https://leetcode.com/problems/implement-rand10-using-rand7)  
+
+```python
+class Solution:
+    def rand10(self):
+        num = (rand7() - 1) * 7 + rand7()
+        while num > 10:
+            num = (rand7() - 1) * 7 + rand7()
+        
+        return num
+```
+
+202. [Happy Number](https://leetcode.com/problems/happy-number)  
+
+```python
+class Solution:
+    def isHappy(self, n: int) -> bool:
+        seen = set()
+        
+        while n != 1:
+            if n in seen:
+                return False
+            
+            seen.add(n)
+            
+            nxt = 0
+            while n >= 1:
+                nxt += (n % 10) ** 2
+                n //= 10
+            
+            n = nxt
+        
+        return True
+```
