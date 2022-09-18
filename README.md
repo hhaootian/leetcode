@@ -1,3 +1,1 @@
-# LeetCode 
-
-LeetCode Study Plan, written in c++
+# LeetCode contest history
